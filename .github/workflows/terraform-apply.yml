@@ -1,0 +1,87 @@
+name: "Terraform Apply (Gated by Environment Approval)"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.tf"
+      - "**.tfvars"
+      - "modules/**"
+      - "environments/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  apply-dev:
+    name: "Deploy Dev Environment"
+    runs-on: ubuntu-latest
+    # GitHub Environment protection rule: manual approval can be configured in GitHub repo settings
+    environment: dev
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.7"
+
+      - name: Configure AWS Credentials (OIDC or Keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Select Workspace Dev & Apply
+        run: |
+          terraform workspace select -or-create dev
+          terraform apply -var-file="environments/dev.tfvars" -auto-approve
+
+      - name: Output Dev Details
+        run: |
+          echo "=== Dev Environment Deployed ==="
+          terraform output -raw alb_dns_name || true
+
+  apply-prod:
+    name: "Deploy Prod Environment (Gated by Approval)"
+    needs: apply-dev
+    runs-on: ubuntu-latest
+    # Manual approval gate configured via GitHub Environment 'prod'
+    environment: prod
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.7"
+
+      - name: Configure AWS Credentials (OIDC or Keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Select Workspace Prod & Apply
+        run: |
+          terraform workspace select -or-create prod
+          terraform apply -var-file="environments/prod.tfvars" -auto-approve
+
+      - name: Output Prod Details
+        run: |
+          echo "=== Prod Environment Deployed ==="
+          terraform output -raw alb_dns_name || true
