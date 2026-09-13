@@ -134,9 +134,14 @@ aws dynamodb create-table \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST \
   --region us-east-1
+
+# 3. Create CI/CD IAM User and Access Keys
+aws iam create-user --user-name github-actions-deployer
+aws iam attach-user-policy --user-name github-actions-deployer --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+aws iam create-access-key --user-name github-actions-deployer
 ```
 
-Make sure the bucket name in `versions.tf` matches your S3 bucket.
+Add the generated `AccessKeyId` and `SecretAccessKey` to your GitHub Repository Secrets (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`). Make sure the bucket name in `versions.tf` matches your S3 bucket.
 
 ### 2. Initialize and Create Workspaces
 
@@ -180,9 +185,16 @@ terraform apply -var-file="environments/prod.tfvars" -auto-approve
 
 ## CI/CD Pipeline
 
-The GitHub Actions workflows under `.github/workflows/` automate the delivery pipeline:
-- `terraform-pr.yml`: Triggers on pull requests to `main`. Runs `terraform fmt -check`, `terraform validate`, Checkov security scan, and `terraform plan` for both workspaces.
-- `terraform-apply.yml`: Triggers on push to `main`. Deploys `dev` automatically, then pauses for manual environment approval before deploying `prod`. Supports OIDC federation and repository secrets.
+The GitHub Actions workflows under `.github/workflows/` automate the infrastructure delivery pipeline:
+
+### Repository Secrets Required
+Set the following secrets in GitHub (**Settings -> Secrets and variables -> Actions**):
+- `AWS_ACCESS_KEY_ID`: AWS Access Key ID for CI/CD deployment
+- `AWS_SECRET_ACCESS_KEY`: AWS Secret Access Key for CI/CD deployment
+
+### Workflows
+- **`terraform-pr.yml`**: Triggers on pull requests targeting `main`. Runs `terraform fmt -check`, `terraform validate`, Checkov security and compliance scan, and generates `terraform plan` matrix for both `dev` and `prod`.
+- **`terraform-apply.yml`**: Triggers on pushes to `main`. Deploys `dev` automatically, outputs the ALB DNS URL, and holds `prod` behind manual approval.
 
 ## Teardown
 
