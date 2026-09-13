@@ -35,7 +35,7 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
 resource "aws_db_instance" "this" {
   identifier                 = "${var.project_name}-${var.environment}-mysql"
   engine                     = "mysql"
-  engine_version             = "8.0.35"
+  engine_version             = "8.0"
   instance_class             = var.db_instance_class
   allocated_storage          = 20
   max_allocated_storage      = 20
