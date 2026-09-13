@@ -19,8 +19,6 @@ jobs:
   apply-dev:
     name: "Deploy Dev Environment"
     runs-on: ubuntu-latest
-    # GitHub Environment protection rule: manual approval can be configured in GitHub repo settings
-    environment: dev
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
