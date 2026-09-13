@@ -50,7 +50,6 @@ jobs:
           framework: terraform
           output_format: cli
           soft_fail: true
-          config_file: .checkov.yml
 
   terraform-plan:
     name: "Terraform Plan (Dev & Prod)"
