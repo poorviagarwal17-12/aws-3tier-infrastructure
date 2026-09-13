@@ -121,17 +121,13 @@ Terraform state is stored in an S3 bucket with versioning and AES256 encryption.
 Create the S3 state bucket and DynamoDB table once before initializing Terraform:
 
 ```bash
-# Create S3 state bucket (replace with your bucket name)
-aws s3api create-bucket --bucket my-tfstate-3tier-bucket-12345 --region us-east-1
+# 1. Create S3 State Bucket
+aws s3api create-bucket --bucket terraform-state-127228002868 --region us-east-1
 
-# Enable versioning
-aws s3api put-bucket-versioning --bucket my-tfstate-3tier-bucket-12345 --versioning-configuration Status=Enabled
+# Enable versioning on the state bucket
+aws s3api put-bucket-versioning --bucket terraform-state-127228002868 --versioning-configuration Status=Enabled
 
-# Enable encryption
-aws s3api put-bucket-encryption --bucket my-tfstate-3tier-bucket-12345 \
-  --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
-
-# Create DynamoDB table for state locking
+# 2. Create DynamoDB Lock Table
 aws dynamodb create-table \
   --table-name terraform-state-locks \
   --attribute-definitions AttributeName=LockID,AttributeType=S \
