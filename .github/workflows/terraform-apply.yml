@@ -9,6 +9,7 @@ on:
       - "**.tfvars"
       - "modules/**"
       - "environments/**"
+      - ".github/workflows/**"
 
 permissions:
   id-token: write
