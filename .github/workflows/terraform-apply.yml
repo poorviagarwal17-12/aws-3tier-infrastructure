@@ -29,13 +29,12 @@ jobs:
         with:
           terraform_version: "1.5.7"
 
-      - name: Configure AWS Credentials (OIDC or Keys)
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          audience: sts.amazonaws.com
 
       - name: Terraform Init
         run: terraform init
@@ -65,13 +64,12 @@ jobs:
         with:
           terraform_version: "1.5.7"
 
-      - name: Configure AWS Credentials (OIDC or Keys)
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          audience: sts.amazonaws.com
 
       - name: Terraform Init
         run: terraform init
