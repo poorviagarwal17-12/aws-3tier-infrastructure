@@ -50,54 +50,121 @@ resource "aws_launch_template" "this" {
                 <title>3-Tier Cloud Application</title>
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
                 <style>
-                  body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, sans-serif; }
-                  .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; }
-                  .form-control, .form-select { background-color: #0f172a; border: 1px solid #334155; color: #f8fafc; }
-                  .form-control:focus, .form-select:focus { background-color: #0f172a; color: #fff; border-color: #38bdf8; box-shadow: none; }
+                  body {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    color: #0f172a;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                  .main-card {
+                    background: #ffffff;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+                  }
+                  .badge-tier {
+                    background-color: #e0f2fe;
+                    color: #0369a1;
+                    font-weight: 600;
+                    border: 1px solid #bae6fd;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    font-size: 0.82rem;
+                  }
+                  .form-label {
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-bottom: 6px;
+                  }
+                  .form-control, .form-select {
+                    background-color: #ffffff;
+                    border: 1.5px solid #94a3b8;
+                    color: #0f172a !important;
+                    font-size: 0.95rem;
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                  }
+                  .form-control:focus, .form-select:focus {
+                    background-color: #ffffff;
+                    border-color: #2563eb;
+                    color: #0f172a !important;
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+                  }
+                  .btn-primary {
+                    background-color: #2563eb;
+                    border-color: #2563eb;
+                    font-weight: 600;
+                    border-radius: 8px;
+                    padding: 12px;
+                    font-size: 1rem;
+                  }
+                  .btn-primary:hover {
+                    background-color: #1d4ed8;
+                    border-color: #1d4ed8;
+                  }
+                  .summary-box {
+                    background-color: #f8fafc;
+                    border: 1.5px solid #e2e8f0;
+                    border-radius: 10px;
+                  }
                 </style>
               </head>
               <body>
               <div class="container py-5">
                 <div class="row justify-content-center">
-                  <div class="col-md-6">
-                    <div id="formCard" class="card p-4 shadow">
-                      <h3 class="text-center mb-3">Feedback &amp; Registration</h3>
-                      <p class="text-secondary text-center small mb-4">AWS 3-Tier Infrastructure &bull; EC2 Private Subnet &bull; ALB</p>
+                  <div class="col-md-7 col-lg-6">
+                    <div id="formCard" class="main-card p-4 p-md-5">
+                      <div class="text-center mb-4">
+                        <span class="badge-tier d-inline-block mb-2">AWS 3-Tier Production Architecture</span>
+                        <h2 class="fw-bold text-dark mt-1">Feedback &amp; Registration</h2>
+                        <p class="text-muted small">Application Load Balancer &bull; Private EC2 ASG &bull; RDS MySQL</p>
+                      </div>
                       <form id="feedbackForm" onsubmit="handleSubmit(event)">
                         <div class="mb-3">
-                          <label class="form-label">Full Name</label>
-                          <input type="text" class="form-control" id="nameInput" placeholder="Enter your name" required>
+                          <label class="form-label" for="nameInput">Full Name</label>
+                          <input type="text" class="form-control" id="nameInput" placeholder="Enter your full name" required>
                         </div>
                         <div class="mb-3">
-                          <label class="form-label">Email</label>
-                          <input type="email" class="form-control" id="emailInput" placeholder="Enter your email" required>
+                          <label class="form-label" for="emailInput">Email Address</label>
+                          <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" required>
                         </div>
                         <div class="mb-3">
-                          <label class="form-label">Category</label>
+                          <label class="form-label" for="topicInput">Assessment Category</label>
                           <select class="form-select" id="topicInput" required>
-                            <option value="DevOps Assessment">DevOps Assessment</option>
-                            <option value="Terraform Architecture">Terraform Architecture</option>
-                            <option value="General Feedback">General Feedback</option>
+                            <option value="DevOps CI/CD Deployment">DevOps CI/CD Deployment</option>
+                            <option value="Terraform 3-Tier Architecture">Terraform 3-Tier Architecture</option>
+                            <option value="Security &amp; Compliance Scan">Security &amp; Compliance Scan</option>
+                            <option value="General Project Feedback">General Project Feedback</option>
                           </select>
                         </div>
-                        <div class="mb-3">
-                          <label class="form-label">Message</label>
-                          <textarea class="form-control" id="msgInput" rows="3" placeholder="Enter message" required></textarea>
+                        <div class="mb-4">
+                          <label class="form-label" for="msgInput">Your Message / Feedback</label>
+                          <textarea class="form-control" id="msgInput" rows="3" placeholder="Write your comments here..." required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Submit Response</button>
                       </form>
                     </div>
 
-                    <div id="thankYouCard" class="card p-4 text-center shadow d-none">
-                      <h2 class="text-success mb-2">Thank You!</h2>
-                      <p class="text-secondary">Your feedback response was recorded successfully.</p>
-                      <div class="text-start bg-dark p-3 rounded mb-3 small">
-                        <div><strong>Name:</strong> <span id="resName"></span></div>
-                        <div><strong>Email:</strong> <span id="resEmail"></span></div>
-                        <div><strong>Category:</strong> <span id="resTopic"></span></div>
-                        <div><strong>Message:</strong> <span id="resMsg"></span></div>
+                    <div id="thankYouCard" class="main-card p-4 p-md-5 text-center d-none">
+                      <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle" style="width: 60px; height: 60px;">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                          </svg>
+                        </div>
                       </div>
-                      <button class="btn btn-outline-light btn-sm" onclick="resetForm()">Submit Another Response</button>
+                      <h2 class="fw-bold text-dark mb-1">Thank You!</h2>
+                      <p class="text-muted mb-4">Your feedback response has been recorded successfully in the 3-Tier database.</p>
+                      <div class="summary-box p-3 text-start mb-4">
+                        <div class="mb-2"><strong class="text-dark">Name:</strong> <span class="text-secondary" id="resName"></span></div>
+                        <div class="mb-2"><strong class="text-dark">Email:</strong> <span class="text-secondary" id="resEmail"></span></div>
+                        <div class="mb-2"><strong class="text-dark">Category:</strong> <span class="text-secondary" id="resTopic"></span></div>
+                        <div><strong class="text-dark">Message:</strong> <span class="text-secondary" id="resMsg"></span></div>
+                      </div>
+                      <button class="btn btn-outline-secondary w-100" onclick="resetForm()">Submit Another Response</button>
                     </div>
                   </div>
                 </div>
