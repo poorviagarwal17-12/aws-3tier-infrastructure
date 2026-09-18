@@ -35,8 +35,10 @@ module "database" {
   db_subnet_group_name = module.network.db_subnet_group_name
   db_security_group_id = module.security.db_security_group_id
   deletion_protection  = var.deletion_protection
-}
 
+  
+}
+#comment
 module "compute" {
   source = "./modules/compute"
 
